@@ -1,0 +1,14 @@
+{
+  "name": "diskt/theme-old00",
+  "description": "Tema retrô Old00 inspirado na estética dos anos 2000 e cultura Hacker",
+  "type": "magento2-theme",
+  "version": "1.0.0",
+  "license": [
+    "MIT"
+  ],
+  "autoload": {
+    "files": [
+      "registration.php"
+    ]
+  }
+}
