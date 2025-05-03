@@ -1,0 +1,136 @@
+<h1>Configurações do Tema - Old00</h1>
+<br>
+<p>Aqui você pode editar as opções de estilo para o tema.</p>
+
+<form action="<?= $block->getFormAction() ?>" method="post" id="theme-options-form">
+    <?= $block->getBlockHtml('formkey') ?>
+
+    <!-- Modo Hacker -->
+    <div style="margin-bottom: 20px;">
+<br>
+        <label for="modo_hacker">💻 Ativar estilo Hacker:</label>
+        <select id="modo_hacker" name="modo_hacker">
+            <option value="1" <?= $block->getModoHacker() == '1' ? 'selected' : '' ?>>Sim</option>
+            <option value="0" <?= $block->getModoHacker() == '0' ? 'selected' : '' ?>>Não</option>
+            <option value="custom" <?= $block->getModoHacker() == 'custom' ? 'selected' : '' ?>>Personalizado</option>
+        </select>
+    </div>
+
+    <!-- Cor de Fundo do Site -->
+    <div style="margin-bottom: 20px;">
+        <label for="cor_principal">🎨 Cor de Fundo do Site:</label>
+        <input type="color" id="cor_principal" name="cor_principal" value="<?= $block->getCorPrincipal() ?>">
+        <input type="text" id="hex_cor_principal" name="hex_cor_principal" value="<?= $block->getHexCorPrincipal() ?>" maxlength="7" placeholder="Código Hexadecimal" style="margin-top: 5px;">
+    </div>
+
+    <!-- Fonte do Site -->
+    <div style="margin-bottom: 20px;">
+        <label for="fonte_site">🔤 Fonte do site:</label>
+        <select id="fonte_site" name="fonte_site">
+            <option value="'Courier New', monospace" <?= $block->getFonteSite() == "'Courier New', monospace" ? 'selected' : '' ?>>Courier New</option>
+            <option value="Arial" <?= $block->getFonteSite() == 'Arial' ? 'selected' : '' ?>>Arial</option>
+            <option value="Roboto" <?= $block->getFonteSite() == 'Roboto' ? 'selected' : '' ?>>Roboto</option>
+            <option value="Open Sans" <?= $block->getFonteSite() == 'Open Sans' ? 'selected' : '' ?>>Open Sans</option>
+        </select>
+    </div>
+
+    <!-- Mostrar Botão Voltar ao Topo -->
+    <div style="margin-bottom: 20px;">
+        <label for="mostrar_voltar_topo">⬆ Mostrar botão "Voltar ao topo":</label>
+        <select id="mostrar_voltar_topo" name="mostrar_voltar_topo">
+            <option value="1" <?= $block->getMostrarVoltarTopo() == '1' ? 'selected' : '' ?>>Sim</option>
+            <option value="0" <?= $block->getMostrarVoltarTopo() == '0' ? 'selected' : '' ?>>Não</option>
+        </select>
+    </div>
+
+    <!-- Cor do botão "Voltar ao Topo" (se sim) -->
+    <div id="cor_botao_voltar" style="display: none; margin-bottom: 20px;">
+        <label for="cor_voltar_topo">🎨 Cor do botão "Voltar ao topo":</label>
+        <input type="color" id="cor_voltar_topo" name="cor_voltar_topo" value="<?= $block->getCorVoltarTopo() ?>">
+        <input type="text" id="hex_cor_voltar_topo" name="hex_cor_voltar_topo" value="<?= $block->getHexCorVoltarTopo() ?>" maxlength="7" placeholder="Código Hexadecimal" style="margin-top: 5px;">
+    </div>
+
+    <div>
+        <button type="submit" class="action-default primary">
+            💾 Salvar configurações
+        </button>
+    </div>
+</form>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const modoHacker = document.getElementById('modo_hacker');
+        const corPrincipal = document.getElementById('cor_principal');
+        const hexCorPrincipal = document.getElementById('hex_cor_principal');
+        const fonteSite = document.getElementById('fonte_site');
+        const mostrarVoltarTopo = document.getElementById('mostrar_voltar_topo');
+        const corBotaoVoltar = document.getElementById('cor_botao_voltar');
+        const corVoltarTopo = document.getElementById('cor_voltar_topo');
+        const hexCorVoltarTopo = document.getElementById('hex_cor_voltar_topo');
+
+        function atualizarCampos() {
+            const valorModoHacker = modoHacker.value;
+
+            if (valorModoHacker === '1') {
+                corPrincipal.value = '#000000';
+                corPrincipal.disabled = true;
+                hexCorPrincipal.disabled = true;
+                hexCorPrincipal.value = '#000000';
+                fonteSite.value = "'Courier New', monospace";
+                corVoltarTopo.disabled = true;
+                corVoltarTopo.value = '#000000';
+                hexCorVoltarTopo.disabled = true;
+                hexCorVoltarTopo.value = '#000000';
+            } else if (valorModoHacker === '0') {
+                corPrincipal.value = '#ffffff';
+                corPrincipal.disabled = true;
+                hexCorPrincipal.disabled = true;
+                hexCorPrincipal.value = '#ffffff';
+                fonteSite.value = 'Arial';
+                corVoltarTopo.disabled = false;
+                corVoltarTopo.value = '#0000ff';
+                hexCorVoltarTopo.disabled = false;
+                hexCorVoltarTopo.value = '#0000ff';
+            } else {
+                corPrincipal.disabled = false;
+                hexCorPrincipal.disabled = false;
+                fonteSite.value = 'Arial';
+                corVoltarTopo.disabled = false;
+                hexCorVoltarTopo.disabled = false;
+            }
+
+            if (mostrarVoltarTopo.value === '1') {
+                corBotaoVoltar.style.display = 'block';
+            } else {
+                corBotaoVoltar.style.display = 'none';
+            }
+        }
+
+        hexCorPrincipal.addEventListener('input', function () {
+            corPrincipal.value = hexCorPrincipal.value;
+        });
+
+        corPrincipal.addEventListener('input', function () {
+            hexCorPrincipal.value = corPrincipal.value;
+        });
+
+        hexCorVoltarTopo.addEventListener('input', function () {
+            corVoltarTopo.value = hexCorVoltarTopo.value;
+        });
+
+        corVoltarTopo.addEventListener('input', function () {
+            hexCorVoltarTopo.value = corVoltarTopo.value;
+        });
+
+        modoHacker.addEventListener('change', atualizarCampos);
+        mostrarVoltarTopo.addEventListener('change', function () {
+            if (mostrarVoltarTopo.value === '1') {
+                corBotaoVoltar.style.display = 'block';
+            } else {
+                corBotaoVoltar.style.display = 'none';
+            }
+        });
+
+        atualizarCampos();
+    });
+</script>
