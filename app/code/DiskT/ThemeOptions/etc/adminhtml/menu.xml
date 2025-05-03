@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!-- Menu XML para o tema Old00 -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+
+    <menu>
+        <!-- Item de menu principal -->
+        <add id="DiskT_ThemeOptions::main_menu"
+             title="Old00 Theme Options"
+             module="DiskT_ThemeOptions"
+             sortOrder="100"
+             resource="DiskT_ThemeOptions::config"/>
+
+        <!-- Subitem: Editar Tema -->
+        <add id="DiskT_ThemeOptions::edit_theme"
+             title="Editar Tema"
+             module="DiskT_ThemeOptions"
+             sortOrder="10"
+             parent="DiskT_ThemeOptions::main_menu"
+             action="themeoptions/index/index"
+             resource="DiskT_ThemeOptions::config"/>
+    </menu>
+</config>
