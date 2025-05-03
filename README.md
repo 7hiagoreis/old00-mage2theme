@@ -2,6 +2,11 @@
 
 Tema personalizado para Magento 2 desenvolvido para facilitar a personalização visual diretamente pelo painel administrativo, sem necessidade de editar arquivos CSS ou LESS.
 
+⚠️ Aviso Importante
+Este tema ainda está em desenvolvimento e pode conter erros ou funcionalidades incompletas.
+
+Use com cautela!
+
 ---
 
 ## 📦 Instalação
@@ -22,7 +27,4 @@ bin/magento cache:flush
 ```bash
 
 
-⚠️ Aviso Importante
-Este tema ainda está em desenvolvimento e pode conter erros ou funcionalidades incompletas.
 
-Use com cautela!
