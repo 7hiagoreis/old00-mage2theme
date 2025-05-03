@@ -1,0 +1,55 @@
+<?xml version="1.0" ?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+
+    <system>
+        <section id="diskt_theme" translate="label" sortOrder="900" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Tema Old00</label>
+            <tab>design</tab>
+            <resource>Magento_Config::config</resource>
+
+            <group id="general" translate="label" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Configurações Gerais</label>
+
+                <field id="hacker_mode" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>💻 Estilo Hacker</label>
+                    <source_model>DiskT\ThemeOptions\Model\Config\Source\HackerThemeOptions</source_model>
+                </field>
+
+                <field id="theme_color" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>🎨 Cor Principal (Hex)</label>
+                    <depends>
+                        <hacker_mode>custom</hacker_mode>
+                    </depends>
+                </field>
+
+                <field id="background_color" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>🖼️ Cor de Fundo</label>
+                    <depends>
+                        <hacker_mode>custom</hacker_mode>
+                    </depends>
+                </field>
+
+                <field id="link_color" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>🔗 Cor dos Links</label>
+                    <depends>
+                        <hacker_mode>custom</hacker_mode>
+                    </depends>
+                </field>
+
+                <field id="font_family" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>🔤 Fonte do Site</label>
+                    <depends>
+                        <hacker_mode>custom</hacker_mode>
+                    </depends>
+                </field>
+
+                <field id="back_to_top" translate="label" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>⬆ Mostrar botão "Voltar ao topo"</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+
+            </group>
+        </section>
+    </system>
+</config>
