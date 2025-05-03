@@ -19,14 +19,10 @@ bin/magento setup:upgrade
 bin/magento setup:di:compile
 bin/magento setup:static-content:deploy -f
 bin/magento cache:flush
+```bash
 
-
-
----
 
 ⚠️ Aviso Importante
-
 Este tema ainda está em desenvolvimento e pode conter erros ou funcionalidades incompletas.
 
 Use com cautela!
-
