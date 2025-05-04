@@ -1,0 +1,20 @@
+<?php
+$modoHacker = $block->getModoHacker();
+$corFundo = $block->getCorPrincipal();
+$corFonte = $block->getCorFontePrincipal();
+$fonte = $block->getFonteSite();
+?>
+
+<style>
+    body {
+        background-color: <?= $corFundo ?>;
+        color: <?= $corFonte ?>;
+        font-family: <?= $fonte ?>;
+    }
+
+    <?php if ($modoHacker == '1'): ?>
+    a, p, h1, h2, h3 {
+        color: #00ff00; /* estilo hacker */
+    }
+    <?php endif; ?>
+</style>
