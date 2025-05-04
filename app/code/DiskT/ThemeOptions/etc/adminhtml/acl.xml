@@ -1,16 +1,14 @@
 <?xml version="1.0"?>
 <acl xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
      xsi:noNamespaceSchemaLocation="urn:magento:framework:Acl/etc/acl.xsd">
-    <acl>
-        <resources>
-            <!-- Definindo o acesso de administradores -->
-            <resource id="Magento_Backend::admin">
-                <!-- Menu principal do módulo -->
-                <resource id="DiskT_ThemeOptions::main_menu" title="Old00 Theme Options" sortOrder="10">
-                    <!-- Permissão para editar as configurações do tema -->
-                    <resource id="DiskT_ThemeOptions::settings" title="Editar Tema" sortOrder="10" />
-                </resource>
+    <resources>
+        <!-- Definindo o acesso de administradores -->
+        <resource id="Magento_Backend::admin">
+            <!-- Menu principal do módulo -->
+            <resource id="DiskT_ThemeOptions::main_menu" title="Old00 Theme Options" sortOrder="10">
+                <!-- Permissão para editar as configurações do tema -->
+                <resource id="DiskT_ThemeOptions::settings" title="Editar Tema" sortOrder="10" />
             </resource>
-        </resources>
-    </acl>
+        </resource>
+    </resources>
 </acl>
