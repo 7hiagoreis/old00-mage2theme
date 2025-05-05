@@ -107,25 +107,6 @@
       <input type="text" id="hex_cor_voltar_topo" name="hex_cor_voltar_topo" value="<?= $block->getHexCorVoltarTopo() ?>" placeholder="#0000ff" maxlength="7" class="<?= $block->isVoltarTopoEditable() ? '' : 'disabled-field' ?>" />
     </div>
 
-    <!-- Mensagem de boas-vindas -->
-    <div class="form-group">
-      <label for="label"><i class="fas fa-smile"></i> Mostrar mensagem de boas-vindas:</label>
-      <select id="label" name="mostrar_voltar_topo3">
-        <option value="1" <?= $block->getMostrarVoltarTopo() == '1' ? 'selected' : '' ?>>Sim</option>
-        <option value="0" <?= $block->getMostrarVoltarTopo() == '0' ? 'selected' : '' ?>>Não</option>
-      </select>
-    </div>
-
-    <!-- Alinhamento de Títulos -->
-    <div class="form-group">
-      <label for="label2"><i class="fas fa-align-center"></i> Alinhamento dos Títulos:</label>
-      <select id="label2" name="mostrar_voltar_topo4">
-        <option value="alin_tit_esq">Esquerda</option>
-        <option value="alin_tit_cent">Centro</option>
-        <option value="alin_tit_dir">Direita</option>
-      </select>
-    </div>
-
     <!-- Botão salvar -->
     <div class="clearfix">
       <button type="submit" class="btn-save"><i class="fas fa-save"></i> Salvar configurações</button>
@@ -137,40 +118,64 @@
       const modoHacker = document.getElementById('modo_hacker');
       const corPrincipal = document.getElementById('cor_principal');
       const hexCorPrincipal = document.getElementById('hex_cor_principal');
+      const corLink = document.getElementById('cor_link');
+      const hexCorLink = document.getElementById('hex_cor_link');
+      const corFonte = document.getElementById('cor_fonte');
+      const hexCorFonte = document.getElementById('hex_cor_fonte');
+      const corBotaoPrimario = document.getElementById('cor_botao_primario');
+      const hexCorBotaoPrimario = document.getElementById('hex_cor_botao_primario');
+      const corLinkBotao = document.getElementById('cor_link_botao');
+      const hexCorLinkBotao = document.getElementById('hex_cor_link_botao');
+      const mostrarVoltarTopo = document.getElementById('mostrar_voltar_topo');
       const corBotaoVoltar = document.getElementById('cor_botao_voltar');
       const corVoltarTopo = document.getElementById('cor_voltar_topo');
       const hexCorVoltarTopo = document.getElementById('hex_cor_voltar_topo');
-      const mostrarVoltarTopo = document.getElementById('mostrar_voltar_topo');
-      const camposDesativados = document.querySelectorAll('.disabled-field');
+      const camposCor = [corPrincipal, corLink, corFonte, corBotaoPrimario, corLinkBotao];
 
       function atualizarCampos() {
         const modo = modoHacker.value;
-
+        const camposEditaveis = modo === 'custom';
+        
+        // Para modo Hacker (escuro)
         if (modo === '1') {
-          corPrincipal.value = '#000000';
-          hexCorPrincipal.value = '#000000';
-          corPrincipal.disabled = hexCorPrincipal.disabled = true;
-        } else if (modo === '0') {
-          corPrincipal.value = '#ffffff';
-          hexCorPrincipal.value = '#ffffff';
-          corPrincipal.disabled = hexCorPrincipal.disabled = true;
-          corBotaoVoltar.disabled = corVoltarTopo.disabled = hexCorVoltarTopo.disabled = false;
-        } else {
-          corPrincipal.disabled = hexCorPrincipal.disabled = false;
-          corBotaoVoltar.disabled = corVoltarTopo.disabled = hexCorVoltarTopo.disabled = false;
+          corPrincipal.value = '#1a1a1a';
+          hexCorPrincipal.value = '#1a1a1a';
+          corLink.value = '#80ff80';
+          hexCorLink.value = '#80ff80';
+          corFonte.value = '#ffffff';
+          hexCorFonte.value = '#ffffff';
+          corBotaoPrimario.value = '#ff6347'; // cor do botão primário no modo escuro
+          hexCorBotaoPrimario.value = '#ff6347';
+          corLinkBotao.value = '#ffffff'; // cor do link nos botões no modo escuro
+          hexCorLinkBotao.value = '#ffffff';
+        }
+        // Para modo Clean (claro)
+        else if (modo === '0') {
+          corPrincipal.value = '#f4f4f4';
+          hexCorPrincipal.value = '#f4f4f4';
+          corLink.value = '#0000ff';
+          hexCorLink.value = '#0000ff';
+          corFonte.value = '#000000';
+          hexCorFonte.value = '#000000';
+          corBotaoPrimario.value = '#007bff'; // cor do botão primário no modo claro
+          hexCorBotaoPrimario.value = '#007bff';
+          corLinkBotao.value = '#0000ff'; // cor do link nos botões no modo claro
+          hexCorLinkBotao.value = '#0000ff';
+        }
+        // Para modo personalizado
+        else {
+          corPrincipal.value = '#d3d3d3'; // cor de fundo padrão no modo personalizado (cinza claro)
+          hexCorPrincipal.value = '#d3d3d3';
         }
 
-        corBotaoVoltar.style.display = mostrarVoltarTopo.value === '1' ? 'block' : 'none';
+        // Habilitar ou desabilitar campos
+        camposCor.forEach(campo => {
+          if (camposEditaveis) campo.disabled = false;
+          else campo.disabled = true;
+        });
       }
 
-      // Atualizando campos ao clicar
-      corPrincipal.addEventListener('input', () => hexCorPrincipal.value = corPrincipal.value);
-      hexCorPrincipal.addEventListener('input', () => corPrincipal.value = hexCorPrincipal.value);
-      corVoltarTopo.addEventListener('input', () => hexCorVoltarTopo.value = corVoltarTopo.value);
-      hexCorVoltarTopo.addEventListener('input', () => corVoltarTopo.value = hexCorVoltarTopo.value);
-      mostrarVoltarTopo.addEventListener('change', atualizarCampos);
-
-      // Inicializar
+      modoHacker.addEventListener('change', atualizarCampos);
       atualizarCampos();
     });
   </script>
