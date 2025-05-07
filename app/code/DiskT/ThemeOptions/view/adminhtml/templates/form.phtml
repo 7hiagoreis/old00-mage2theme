@@ -5,10 +5,22 @@
   <title>Configurações do Tema - Old00</title>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
   <style>
-    body { font-family: Arial, sans-serif; padding: 20px; background: #f4f4f4; }
-    h1 { color: #333; }
-    label { font-weight: bold; display: block; margin-bottom: 5px; }
-    .form-group { margin-bottom: 20px; }
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #f4f4f4;
+    }
+    h1 {
+      color: #333;
+    }
+    label {
+      font-weight: bold;
+      display: block;
+      margin-bottom: 5px;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
     select, input[type="text"], input[type="color"] {
       padding: 6px;
       width: 200px;
@@ -28,10 +40,14 @@
       font-weight: bold;
       cursor: pointer;
     }
-    .btn-save i { margin-right: 5px; }
-    .clearfix::after { content: ""; display: table; clear: both; }
-
-    /* Estilo para campos desativados */
+    .btn-save i {
+      margin-right: 5px;
+    }
+    .clearfix::after {
+      content: "";
+      display: table;
+      clear: both;
+    }
     .disabled-field {
       background-color: #e0e0e0;
       pointer-events: none;
@@ -42,54 +58,39 @@
 <body>
   <h1>🎨 Configurações do Tema - Old00</h1>
   <p>Aqui você pode editar as opções de estilo para o tema Old00.</p>
-  
-  <form action="<?= $block->getFormAction() ?>" method="post" id="theme-options-form">
+  <form action="<?= $block->getUrl('themeoptions/index/save') ?>" method="post" id="theme-options-form">
     <?= $block->getBlockHtml('formkey') ?>
-    
+
     <!-- Estilo do Tema -->
     <div class="form-group">
       <label for="modo_hacker"><i class="fas fa-laptop-code"></i> Estilo do Tema:</label>
       <select id="modo_hacker" name="modo_hacker">
-        <option value="1">Old00 Hacker (escuro)</option>
-        <option value="0">Old00 Clean (claro)</option>
+        <option value="1" <?= $block->getModoHacker() == '1' ? 'selected' : '' ?>>Old00 Hacker (escuro)</option>
+        <option value="0" <?= $block->getModoHacker() == '0' ? 'selected' : '' ?>>Old00 Clean (claro)</option>
         <option value="custom" <?= $block->getModoHacker() == 'custom' ? 'selected' : '' ?>>Personalizado</option>
       </select>
     </div>
 
-    <!-- Cor de Fundo -->
-    <div class="form-group">
-      <label for="cor_principal"><i class="fas fa-fill-drip"></i> Cor de Fundo do Site:</label>
-      <input type="color" id="cor_principal" name="cor_principal" value="<?= $block->getCorPrincipal() ?>" class="<?= $block->isCorEditable() ? '' : 'disabled-field' ?>" />
-      <input type="text" id="hex_cor_principal" name="hex_cor_principal" value="<?= $block->getHexCorPrincipal() ?>" placeholder="#000000" maxlength="7" class="<?= $block->isCorEditable() ? '' : 'disabled-field' ?>" />
-    </div>
-
-    <!-- Cor do Link -->
-    <div class="form-group">
-      <label for="cor_link"><i class="fas fa-link"></i> Cor do Link:</label>
-      <input type="color" id="cor_link" name="cor_link" value="<?= $block->getCorLink() ?>" class="<?= $block->isCorEditable() ? '' : 'disabled-field' ?>" />
-      <input type="text" id="hex_cor_link" name="hex_cor_link" value="<?= $block->getHexCorLink() ?>" placeholder="#0000ff" maxlength="7" class="<?= $block->isCorEditable() ? '' : 'disabled-field' ?>" />
-    </div>
-
-    <!-- Cor da Fonte -->
-    <div class="form-group">
-      <label for="cor_fonte"><i class="fas fa-font"></i> Cor da Fonte do Texto:</label>
-      <input type="color" id="cor_fonte" name="cor_fonte" value="<?= $block->getCorFonte() ?>" class="<?= $block->isCorEditable() ? '' : 'disabled-field' ?>" />
-      <input type="text" id="hex_cor_fonte" name="hex_cor_fonte" value="<?= $block->getHexCorFonte() ?>" placeholder="#333333" maxlength="7" class="<?= $block->isCorEditable() ? '' : 'disabled-field' ?>" />
-    </div>
-
-    <!-- Cor dos Botões Primários -->
-    <div class="form-group">
-      <label for="cor_botao_primario"><i class="fas fa-cogs"></i> Cor do Botão Primário:</label>
-      <input type="color" id="cor_botao_primario" name="cor_botao_primario" value="<?= $block->getCorBotaoPrimario() ?>" class="<?= $block->isBotaoEditable() ? '' : 'disabled-field' ?>" />
-      <input type="text" id="hex_cor_botao_primario" name="hex_cor_botao_primario" value="<?= $block->getHexCorBotaoPrimario() ?>" placeholder="#007bff" maxlength="7" class="<?= $block->isBotaoEditable() ? '' : 'disabled-field' ?>" />
-    </div>
-
-    <!-- Cor dos Links nos Botões -->
-    <div class="form-group">
-      <label for="cor_link_botao"><i class="fas fa-link"></i> Cor do Link nos Botões:</label>
-      <input type="color" id="cor_link_botao" name="cor_link_botao" value="<?= $block->getCorLinkBotao() ?>" class="<?= $block->isBotaoEditable() ? '' : 'disabled-field' ?>" />
-      <input type="text" id="hex_cor_link_botao" name="hex_cor_link_botao" value="<?= $block->getHexCorLinkBotao() ?>" placeholder="#ffffff" maxlength="7" class="<?= $block->isBotaoEditable() ? '' : 'disabled-field' ?>" />
-    </div>
+    <!-- Campo dinâmico de cores -->
+    <?php
+    $campos = [
+      'cor_principal' => ['Cor de Fundo do Site', '#000000'],
+      'cor_link' => ['Cor do Link', '#0000ff'],
+      'cor_fonte' => ['Cor da Fonte do Texto', '#333333'],
+      'cor_botao_primario' => ['Cor do Botão Primário', '#007bff'],
+      'cor_link_botao' => ['Cor do Link nos Botões', '#ffffff'],
+      'cor_voltar_topo' => ['Cor do botão "Voltar ao topo"', '#0000ff'],
+    ];
+    foreach ($campos as $id => $info): 
+      $label = $info[0];
+      $placeholder = $info[1];
+    ?>
+      <div class="form-group" id="grupo_<?= $id ?>">
+        <label for="<?= $id ?>"><i class="fas fa-palette"></i> <?= $label ?>:</label>
+        <input type="color" id="<?= $id ?>" name="<?= $id ?>" value="<?= $block->getData($id) ?>" />
+        <input type="text" id="hex_<?= $id ?>" name="hex_<?= $id ?>" value="<?= $block->getData('hex_' . $id) ?>" placeholder="<?= $placeholder ?>" maxlength="7" />
+      </div>
+    <?php endforeach; ?>
 
     <!-- Mostrar botão voltar ao topo -->
     <div class="form-group">
@@ -100,11 +101,23 @@
       </select>
     </div>
 
-    <!-- Cor do botão "Voltar ao topo" -->
-    <div id="cor_botao_voltar" class="form-group" style="display: none;">
-      <label for="cor_voltar_topo"><i class="fas fa-paint-brush"></i> Cor do botão "Voltar ao topo":</label>
-      <input type="color" id="cor_voltar_topo" name="cor_voltar_topo" value="<?= $block->getCorVoltarTopo() ?>" class="<?= $block->isVoltarTopoEditable() ? '' : 'disabled-field' ?>" />
-      <input type="text" id="hex_cor_voltar_topo" name="hex_cor_voltar_topo" value="<?= $block->getHexCorVoltarTopo() ?>" placeholder="#0000ff" maxlength="7" class="<?= $block->isVoltarTopoEditable() ? '' : 'disabled-field' ?>" />
+    <!-- Mensagem de boas-vindas -->
+    <div class="form-group">
+      <label for="label"><i class="fas fa-smile"></i> Mostrar mensagem de boas-vindas:</label>
+      <select id="label" name="mostrar_voltar_topo3">
+        <option value="1" <?= $block->getMostrarBoasVindas() == '1' ? 'selected' : '' ?>>Sim</option>
+        <option value="0" <?= $block->getMostrarBoasVindas() == '0' ? 'selected' : '' ?>>Não</option>
+      </select>
+    </div>
+
+    <!-- Alinhamento de Títulos -->
+    <div class="form-group">
+      <label for="label2"><i class="fas fa-align-center"></i> Alinhamento dos Títulos:</label>
+      <select id="label2" name="alinhamento_titulos">
+        <option value="alin_tit_esq" <?= $block->getAlinhamentoTitulos() == 'alin_tit_esq' ? 'selected' : '' ?>>Esquerda</option>
+        <option value="alin_tit_cent" <?= $block->getAlinhamentoTitulos() == 'alin_tit_cent' ? 'selected' : '' ?>>Centro</option>
+        <option value="alin_tit_dir" <?= $block->getAlinhamentoTitulos() == 'alin_tit_dir' ? 'selected' : '' ?>>Direita</option>
+      </select>
     </div>
 
     <!-- Botão salvar -->
@@ -115,68 +128,96 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', function () {
-      const modoHacker = document.getElementById('modo_hacker');
-      const corPrincipal = document.getElementById('cor_principal');
-      const hexCorPrincipal = document.getElementById('hex_cor_principal');
-      const corLink = document.getElementById('cor_link');
-      const hexCorLink = document.getElementById('hex_cor_link');
-      const corFonte = document.getElementById('cor_fonte');
-      const hexCorFonte = document.getElementById('hex_cor_fonte');
-      const corBotaoPrimario = document.getElementById('cor_botao_primario');
-      const hexCorBotaoPrimario = document.getElementById('hex_cor_botao_primario');
-      const corLinkBotao = document.getElementById('cor_link_botao');
-      const hexCorLinkBotao = document.getElementById('hex_cor_link_botao');
+      const modoSelect = document.getElementById('modo_hacker');
       const mostrarVoltarTopo = document.getElementById('mostrar_voltar_topo');
-      const corBotaoVoltar = document.getElementById('cor_botao_voltar');
-      const corVoltarTopo = document.getElementById('cor_voltar_topo');
-      const hexCorVoltarTopo = document.getElementById('hex_cor_voltar_topo');
-      const camposCor = [corPrincipal, corLink, corFonte, corBotaoPrimario, corLinkBotao];
+
+      const campos = [
+        'cor_principal',
+        'cor_link',
+        'cor_fonte',
+        'cor_botao_primario',
+        'cor_link_botao',
+        'cor_voltar_topo'
+      ];
 
       function atualizarCampos() {
-        const modo = modoHacker.value;
-        const camposEditaveis = modo === 'custom';
-        
-        // Para modo Hacker (escuro)
-        if (modo === '1') {
-          corPrincipal.value = '#1a1a1a';
-          hexCorPrincipal.value = '#1a1a1a';
-          corLink.value = '#80ff80';
-          hexCorLink.value = '#80ff80';
-          corFonte.value = '#ffffff';
-          hexCorFonte.value = '#ffffff';
-          corBotaoPrimario.value = '#ff6347'; // cor do botão primário no modo escuro
-          hexCorBotaoPrimario.value = '#ff6347';
-          corLinkBotao.value = '#ffffff'; // cor do link nos botões no modo escuro
-          hexCorLinkBotao.value = '#ffffff';
-        }
-        // Para modo Clean (claro)
-        else if (modo === '0') {
-          corPrincipal.value = '#f4f4f4';
-          hexCorPrincipal.value = '#f4f4f4';
-          corLink.value = '#0000ff';
-          hexCorLink.value = '#0000ff';
-          corFonte.value = '#000000';
-          hexCorFonte.value = '#000000';
-          corBotaoPrimario.value = '#007bff'; // cor do botão primário no modo claro
-          hexCorBotaoPrimario.value = '#007bff';
-          corLinkBotao.value = '#0000ff'; // cor do link nos botões no modo claro
-          hexCorLinkBotao.value = '#0000ff';
-        }
-        // Para modo personalizado
-        else {
-          corPrincipal.value = '#d3d3d3'; // cor de fundo padrão no modo personalizado (cinza claro)
-          hexCorPrincipal.value = '#d3d3d3';
-        }
+        const mostrar = mostrarVoltarTopo.value === '1';
+        document.getElementById('grupo_cor_voltar_topo').style.display = mostrar ? 'block' : 'none';
+      }
 
-        // Habilitar ou desabilitar campos
-        camposCor.forEach(campo => {
-          if (camposEditaveis) campo.disabled = false;
-          else campo.disabled = true;
+      function aplicarTemaPredefinido(tipo) {
+        const valores = {
+          '1': { // hacker
+            cor_principal: '#000000',
+            cor_link: '#00ff00',
+            cor_fonte: '#ffffff',
+            cor_botao_primario: '#ff0000',
+            cor_link_botao: '#000000',
+            cor_voltar_topo: '#00ff00',
+          },
+          '0': { // clean
+            cor_principal: '#ffffff',
+            cor_link: '#007bff',
+            cor_fonte: '#333333',
+            cor_botao_primario: '#007bff',
+            cor_link_botao: '#ffffff',
+            cor_voltar_topo: '#007bff',
+          }
+        };
+        const tema = valores[tipo];
+        campos.forEach(id => {
+          const colorInput = document.getElementById(id);
+          const hexInput = document.getElementById('hex_' + id);
+          colorInput.value = tema[id];
+          hexInput.value = tema[id];
+          colorInput.disabled = true;
+          hexInput.disabled = true;
+          colorInput.classList.add('disabled-field');
+          hexInput.classList.add('disabled-field');
         });
       }
 
-      modoHacker.addEventListener('change', atualizarCampos);
+      function ativarCamposPersonalizados() {
+        campos.forEach(id => {
+          const colorInput = document.getElementById(id);
+          const hexInput = document.getElementById('hex_' + id);
+          colorInput.disabled = false;
+          hexInput.disabled = false;
+          colorInput.classList.remove('disabled-field');
+          hexInput.classList.remove('disabled-field');
+
+          // sincroniza input color -> hex
+          colorInput.addEventListener('input', () => {
+            hexInput.value = colorInput.value.toUpperCase();
+          });
+
+          // sincroniza input hex -> color
+          hexInput.addEventListener('input', () => {
+            if(/^#[0-9A-Fa-f]{6}$/.test(hexInput.value)) {
+              colorInput.value = hexInput.value;
+            }
+          });
+        });
+      }
+
+      modoSelect.addEventListener('change', () => {
+        const valor = modoSelect.value;
+        if (valor === 'custom') {
+          ativarCamposPersonalizados();
+        } else {
+          aplicarTemaPredefinido(valor);
+        }
+      });
+
+      // Executar no carregamento inicial
       atualizarCampos();
+      if (modoSelect.value === 'custom') {
+        ativarCamposPersonalizados();
+      } else {
+        aplicarTemaPredefinido(modoSelect.value);
+      }
+
+      mostrarVoltarTopo.addEventListener('change', atualizarCampos);
     });
   </script>
 </body>
