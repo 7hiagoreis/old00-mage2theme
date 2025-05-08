@@ -1,99 +1,63 @@
 <?php
 namespace DiskT\ThemeOptions\Block\Adminhtml\Theme;
 
-use Magento\Backend\Block\Template;
+use Magento\Framework\View\Element\Template;
+use Magento\Framework\App\Config\ScopeConfigInterface;
 
 class Edit extends Template
 {
-    public function getFormAction()
-    {
-        return $this->getUrl('*/*/save');
+    protected $scopeConfig;
+
+    public function __construct(
+        Template\Context $context,
+        ScopeConfigInterface $scopeConfig,
+        array $data = []
+    ) {
+        parent::__construct($context, $data);
+        $this->scopeConfig = $scopeConfig;
     }
 
-    public function getCorPrincipal()
+    public function getBackgroundColor()
     {
-        return '#000000'; // buscar do config do Tema
+        return $this->scopeConfig->getValue('diskt_theme/general/background_color', \Magento\Store\Model\ScopeInterface::SCOPE_STORE) ?? '#000000';
     }
 
-    public function getHexCorPrincipal()
+    public function getFontColor()
     {
-        return '#ffffff';
+        return $this->scopeConfig->getValue('diskt_theme/general/font_color', \Magento\Store\Model\ScopeInterface::SCOPE_STORE) ?? '#333333';
     }
 
-    public function getCorLink()
+    public function getLinkColor()
     {
-        return '#0000ff';
-    }
-
-    public function getHexCorLink()
-    {
-        return '#0000ff';
-    }
-
-    public function getCorFonte()
-    {
-        return '#333333';
-    }
-
-    public function getHexCorFonte()
-    {
-        return '#333333';
-    }
-
-    public function getCorBotaoPrimario()
-    {
-        return '#007bff';
-    }
-
-    public function getHexCorBotaoPrimario()
-    {
-        return '#007bff';
-    }
-
-    public function getCorLinkBotao()
-    {
-        return '#ffffff';
-    }
-
-    public function getHexCorLinkBotao()
-    {
-        return '#ffffff';
-    }
-
-    public function getCorVoltarTopo()
-    {
-        return '#0000ff';
-    }
-
-    public function getHexCorVoltarTopo()
-    {
-        return '#0000ff';
-    }
-
-    public function getMostrarVoltarTopo()
-    {
-        return '1';
+        return $this->scopeConfig->getValue('diskt_theme/general/link_color', \Magento\Store\Model\ScopeInterface::SCOPE_STORE) ?? '#0000EE';
     }
 
     public function getModoHacker()
     {
-        return 'custom'; // ou '1', '0' conforme lógica
+        return $this->scopeConfig->getValue('diskt_theme/general/hacker_mode', \Magento\Store\Model\ScopeInterface::SCOPE_STORE) ?? 'custom';
     }
 
-    // 🔧 MÉTODOS 
+    public function getFontFamily()
+    {
+        return $this->scopeConfig->getValue('diskt_theme/general/font_family', \Magento\Store\Model\ScopeInterface::SCOPE_STORE) ?? 'Arial, sans-serif';
+    }
 
     public function isCorEditable()
     {
         return $this->getModoHacker() === 'custom';
     }
 
-    public function isBotaoEditable()
+    public function debugConfig()
     {
-        return $this->getModoHacker() === 'custom';
-    }
-
-    public function isVoltarTopoEditable()
-    {
-        return $this->getMostrarVoltarTopo() === '1';
+        echo '<pre>';
+        var_dump([
+            'background_color' => $this->getBackgroundColor(),
+            'font_color' => $this->getFontColor(),
+            'link_color' => $this->getLinkColor(),
+            'modo_hacker' => $this->getModoHacker(),
+            'font_family' => $this->getFontFamily(),
+        ]);
+        echo '</pre>';
+        exit; // 🔥 Remova isso após testar!
     }
 }
