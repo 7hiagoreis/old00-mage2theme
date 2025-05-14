@@ -1,99 +1,136 @@
 <?php
+
 namespace DiskT\ThemeOptions\Block\Adminhtml\Theme;
 
-use Magento\Backend\Block\Template;
+use Magento\Framework\View\Element\Template;
+use Magento\Framework\App\ResourceConnection;
+use Magento\Store\Model\StoreManagerInterface;
+use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\App\State as AppState;
+use Magento\Framework\App\Cache\Manager as CacheManager;
 
 class Edit extends Template
 {
-    public function getFormAction()
-    {
-        return $this->getUrl('*/*/save');
+    protected $resourceConnection;
+    protected $storeManager;
+    protected $scopeConfig;
+    protected $_appState;
+    protected $_cacheManager;
+
+    public function __construct(
+        Template\Context $context,
+        ResourceConnection $resourceConnection,
+        StoreManagerInterface $storeManager,
+        ScopeConfigInterface $scopeConfig,
+        AppState $appState,
+        CacheManager $cacheManager,
+        array $data = []
+    ) {
+        parent::__construct($context, $data);
+        $this->resourceConnection = $resourceConnection;
+        $this->storeManager = $storeManager;
+        $this->scopeConfig = $scopeConfig;
+        $this->_appState = $appState;
+        $this->_cacheManager = $cacheManager;
+
+        // Limpar cache de configuração se estiver em modo desenvolvedor
+        if ($this->_appState->getMode() === AppState::MODE_DEVELOPER) {
+            $this->_cacheManager->clean(['config']);
+        }
     }
 
-    public function getCorPrincipal()
+    private function getSelectedTheme()
     {
-        return '#000000'; // buscar do config do Tema
+        $storeId = $this->storeManager->getStore()->getId();
+        
+        // Primeiro tenta pelo ScopeConfig
+        $themeSelecionado = $this->scopeConfig->getValue(
+            'diskt_theme/general/selected_theme',
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE,
+            $storeId
+        );
+        
+        // Se não encontrou, tenta direto no banco
+        if (empty($themeSelecionado)) {
+            $connection = $this->resourceConnection->getConnection();
+            $sql = "SELECT value FROM core_config_data 
+                    WHERE path = 'diskt_theme/general/selected_theme' 
+                    AND scope = 'stores' 
+                    AND scope_id = :store_id 
+                    ORDER BY config_id DESC LIMIT 1";
+            
+            $themeSelecionado = $connection->fetchOne($sql, ['store_id' => $storeId]);
+        }
+        
+        error_log("Tema carregado no backend: " . $themeSelecionado);
+        
+        return $themeSelecionado ?: 'Old00_Hacker'; // Valor padrão caso não encontre
     }
 
-    public function getHexCorPrincipal()
+    private function getConfigValue($path)
     {
-        return '#ffffff';
-    }
-
-    public function getCorLink()
-    {
-        return '#0000ff';
-    }
-
-    public function getHexCorLink()
-    {
-        return '#0000ff';
-    }
-
-    public function getCorFonte()
-    {
-        return '#333333';
-    }
-
-    public function getHexCorFonte()
-    {
-        return '#333333';
-    }
-
-    public function getCorBotaoPrimario()
-    {
-        return '#007bff';
-    }
-
-    public function getHexCorBotaoPrimario()
-    {
-        return '#007bff';
-    }
-
-    public function getCorLinkBotao()
-    {
-        return '#ffffff';
-    }
-
-    public function getHexCorLinkBotao()
-    {
-        return '#ffffff';
-    }
-
-    public function getCorVoltarTopo()
-    {
-        return '#0000ff';
-    }
-
-    public function getHexCorVoltarTopo()
-    {
-        return '#0000ff';
-    }
-
-    public function getMostrarVoltarTopo()
-    {
-        return '1';
+        $storeId = $this->storeManager->getStore()->getId();
+        $theme = $this->getSelectedTheme();
+        
+        // Primeiro tenta pelo ScopeConfig
+        $value = $this->scopeConfig->getValue(
+            "diskt_theme/$theme/$path",
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE,
+            $storeId
+        );
+        
+        // Se não encontrou, tenta direto no banco
+        if (empty($value)) {
+            $connection = $this->resourceConnection->getConnection();
+            $sql = "SELECT value FROM core_config_data 
+                    WHERE path = :path 
+                    AND scope = 'stores' 
+                    AND scope_id = :store_id 
+                    ORDER BY config_id DESC LIMIT 1";
+            
+            $value = $connection->fetchOne($sql, [
+                'path' => "diskt_theme/$theme/$path", 
+                'store_id' => $storeId
+            ]);
+        }
+        
+        error_log("Configuração carregada ($path) para tema $theme: " . $value);
+        
+        return $value;
     }
 
     public function getModoHacker()
     {
-        return 'custom'; // ou '1', '0' conforme lógica
+        return $this->getConfigValue('hacker_mode');
     }
 
-    // 🔧 MÉTODOS 
-
-    public function isCorEditable()
+    public function getBackgroundColor()
     {
-        return $this->getModoHacker() === 'custom';
+        return $this->getConfigValue('background_color');
     }
 
-    public function isBotaoEditable()
+    public function getFontColor()
     {
-        return $this->getModoHacker() === 'custom';
+        return $this->getConfigValue('font_color');
     }
 
-    public function isVoltarTopoEditable()
+    public function getLinkColor()
     {
-        return $this->getMostrarVoltarTopo() === '1';
+        return $this->getConfigValue('link_color');
+    }
+
+    public function getFontFamily()
+    {
+        return $this->getConfigValue('font_family');
+    }
+
+    public function getButtonColor()
+    {
+        return $this->getConfigValue('botao_primario');
+    }
+
+    public function getLinkButtonColor()
+    {
+        return $this->getConfigValue('cor_link_botao');
     }
 }
